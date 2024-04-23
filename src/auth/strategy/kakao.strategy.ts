@@ -16,8 +16,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     try {
       // 사용자의 카카오 프로필 정보
       const kakaoProfile = profile._json;
-      console.log(kakaoProfile);
-
       // 필요한 사용자 정보 추출 (닉네임과 프로필 사진)
       const user = {
         kakaoId: kakaoProfile.id, // 카카오 ID
