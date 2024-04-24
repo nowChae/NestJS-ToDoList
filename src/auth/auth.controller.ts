@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -8,7 +8,14 @@ export class AuthController {
 
   @Get('kakao')
   @UseGuards(AuthGuard('kakao')) // 카카오 로그인을 위한 Guard 설정
-  async kakaoLogin(@Req() req) {
-    return req.user; // Passport에 의해 인증된 사용자 정보 반환
+  kakaoLogin(@Req() req): Promise<void> {
+    const user = req.user;
+
+    if (!user) {
+      throw new NotFoundException('해당하는 user 정보가 없습니다.');
+    } else {
+      this.authService.createUser(user);
+    }
+    return;
   }
 }

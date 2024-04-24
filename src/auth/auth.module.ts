@@ -3,11 +3,11 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { KakaoStrategy } from './strategy/kakao.strategy';
+import { TypeOrmExModule } from 'src/db/typeorm-ex.module';
+import { UserRepository } from './user.repository';
 
 @Module({
-  imports: [
-    PassportModule, // Passport 모듈 등록
-  ],
+  imports: [PassportModule, TypeOrmExModule.forCustomRepository([UserRepository])],
   controllers: [AuthController],
   providers: [AuthService, KakaoStrategy],
 })
