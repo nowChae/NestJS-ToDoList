@@ -5,10 +5,20 @@ import { PassportModule } from '@nestjs/passport';
 import { KakaoStrategy } from './strategy/kakao.strategy';
 import { TypeOrmExModule } from 'src/db/typeorm-ex.module';
 import { UserRepository } from './user.repository';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
-  imports: [PassportModule, TypeOrmExModule.forCustomRepository([UserRepository])],
+  imports: [
+    PassportModule,
+    TypeOrmExModule.forCustomRepository([UserRepository]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRESIN },
+    }),
+  ],
   controllers: [AuthController],
-  providers: [AuthService, KakaoStrategy],
+  providers: [AuthService, KakaoStrategy, JwtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

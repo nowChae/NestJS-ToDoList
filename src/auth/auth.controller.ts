@@ -1,7 +1,9 @@
-import { Controller, Get, NotFoundException, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
+import { User } from './user.entity';
+import { GetUser } from './get-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -15,10 +17,19 @@ export class AuthController {
     if (!user) {
       throw new NotFoundException('해당하는 user 정보가 없습니다.');
     } else {
-      await this.authService.createUser(user);
+      const accessToken = await this.authService.loginUser(user);
+      res.cookie('access_token', accessToken);
       res.redirect('/login.html');
+      console.log(accessToken);
       console.log('로그인 성공');
     }
     return;
+  }
+
+  @Get('profile')
+  @UseGuards(AuthGuard('jwt'))
+  userProfile(@GetUser() user: User) {
+    console.log('실행은 되니?');
+    console.log('user', user);
   }
 }

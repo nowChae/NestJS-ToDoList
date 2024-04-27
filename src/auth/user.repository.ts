@@ -1,7 +1,6 @@
 import { CustomRepository } from 'src/db/typeorm-ex.decorator';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { ConflictException } from '@nestjs/common';
 
 @CustomRepository(User)
 export class UserRepository extends Repository<User> {
