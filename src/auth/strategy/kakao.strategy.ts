@@ -14,7 +14,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
 
   async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback) {
     try {
-      console.log('kakao strategy 실행중');
       // 사용자의 카카오 프로필 정보
       const kakaoProfile = profile._json;
       // 필요한 사용자 정보 추출 (닉네임과 프로필 사진)

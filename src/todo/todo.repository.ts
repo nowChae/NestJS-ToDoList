@@ -6,6 +6,7 @@ import { CreateTodoRequest } from './dto/create-todo-req.dto';
 import { CreateTodoResponse } from './dto/create-todo-res.dto';
 import { ChangeTitleDtoRequest } from './dto/change-title-req.dto';
 import { ChangeTitleDtoResponse } from './dto/change-title-res.dto';
+import { User } from 'src/auth/user.entity';
 
 @CustomRepository(Todo)
 export class TodoRepository extends Repository<Todo> {
@@ -21,12 +22,13 @@ export class TodoRepository extends Repository<Todo> {
     return todo;
   }
 
-  async createTodo(createTodoRequest: CreateTodoRequest): Promise<CreateTodoResponse> {
+  async createTodo(createTodoRequest: CreateTodoRequest, user: User): Promise<CreateTodoResponse> {
     const { title } = createTodoRequest;
 
     const todo: Todo = this.create({
       title,
       completed: false,
+      user,
     });
     const savedTodo: Todo = await this.save(todo);
 

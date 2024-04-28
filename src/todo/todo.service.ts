@@ -5,6 +5,7 @@ import { CreateTodoResponse } from './dto/create-todo-res.dto';
 import { Todo } from './todo.entity';
 import { ChangeTitleDtoRequest } from './dto/change-title-req.dto';
 import { ChangeTitleDtoResponse } from './dto/change-title-res.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TodoService {
@@ -18,14 +19,14 @@ export class TodoService {
     return this.todoRepository.findOneTodo(id);
   }
 
-  createTodo(createTodoRequest: CreateTodoRequest): Promise<CreateTodoResponse> {
+  createTodo(createTodoRequest: CreateTodoRequest, user: User): Promise<CreateTodoResponse> {
     const { title } = createTodoRequest;
 
     if (!title || title.trim() === '') {
       throw new BadRequestException(`할 일을 입력해주세요.`);
     }
 
-    return this.todoRepository.createTodo(createTodoRequest);
+    return this.todoRepository.createTodo(createTodoRequest, user);
   }
 
   async changeTitle(id: number, changeTitleRequest: ChangeTitleDtoRequest): Promise<ChangeTitleDtoResponse> {

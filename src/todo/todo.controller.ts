@@ -1,12 +1,16 @@
-import { Body, Controller, Get, Param, Patch, Post, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Delete, UseGuards } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { Todo } from './todo.entity';
 import { CreateTodoRequest } from './dto/create-todo-req.dto';
 import { CreateTodoResponse } from './dto/create-todo-res.dto';
 import { ChangeTitleDtoRequest } from './dto/change-title-req.dto';
 import { ChangeTitleDtoResponse } from './dto/change-title-res.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('todo') //localhost:3000/todo
+@UseGuards(AuthGuard('jwt'))
 export class TodoController {
   constructor(private todoService: TodoService) {} // 의존성 주입
 
@@ -21,8 +25,8 @@ export class TodoController {
   }
 
   @Post()
-  createTodo(@Body() createTodoRequest: CreateTodoRequest): Promise<CreateTodoResponse> {
-    return this.todoService.createTodo(createTodoRequest);
+  createTodo(@Body() createTodoRequest: CreateTodoRequest, @GetUser() user: User): Promise<CreateTodoResponse> {
+    return this.todoService.createTodo(createTodoRequest, user);
   }
 
   @Patch('/:id')
