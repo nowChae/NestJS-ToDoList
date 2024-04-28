@@ -30,4 +30,11 @@ export class AuthController {
   userProfile(@GetUser() user: User) {
     return user;
   }
+
+  @Get('/kakao/logout')
+  kakaoLogout(@Req() req, @Res() res: Response) {
+    console.log('로그아웃');
+    res.redirect('/login.html');
+    return;
+  }
 }
