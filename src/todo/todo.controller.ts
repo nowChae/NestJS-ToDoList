@@ -15,13 +15,13 @@ export class TodoController {
   constructor(private todoService: TodoService) {} // 의존성 주입
 
   @Get()
-  getAllTodo(): Promise<Todo[]> {
-    return this.todoService.getAllTodo();
+  getAllTodo(@GetUser() user: User): Promise<Todo[]> {
+    return this.todoService.getAllTodo(user);
   }
 
   @Get('/:id')
-  getTodoById(@Param('id') id: number): Promise<Todo> {
-    return this.todoService.getTodoById(id);
+  getTodoById(@Param('id') id: number, @GetUser() user: User): Promise<Todo> {
+    return this.todoService.getTodoById(id, user);
   }
 
   @Post()
@@ -33,17 +33,18 @@ export class TodoController {
   changeTodoTitle(
     @Param('id') id: number,
     @Body() changeTitleRequest: ChangeTitleDtoRequest,
+    @GetUser() user: User,
   ): Promise<ChangeTitleDtoResponse> {
-    return this.todoService.changeTitle(id, changeTitleRequest);
+    return this.todoService.changeTitle(id, changeTitleRequest, user);
   }
 
   @Patch('/:id/completes')
-  changeCompletes(@Param('id') id: number): Promise<void> {
-    return this.todoService.changeCompletes(id);
+  changeCompletes(@Param('id') id: number, @GetUser() user: User): Promise<void> {
+    return this.todoService.changeCompletes(id, user);
   }
 
   @Delete('/:id')
-  deleteTodo(@Param('id') id: number): Promise<void> {
-    return this.todoService.deleteTodo(id);
+  deleteTodo(@Param('id') id: number, @GetUser() user: User): Promise<void> {
+    return this.todoService.deleteTodo(id, user);
   }
 }

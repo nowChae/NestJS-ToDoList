@@ -11,12 +11,12 @@ import { User } from 'src/auth/user.entity';
 export class TodoService {
   constructor(private todoRepository: TodoRepository) {}
 
-  getAllTodo(): Promise<Todo[]> {
-    return this.todoRepository.findAllTodo();
+  getAllTodo(user: User): Promise<Todo[]> {
+    return this.todoRepository.findAllTodo(user);
   }
 
-  getTodoById(id: number): Promise<Todo> {
-    return this.todoRepository.findOneTodo(id);
+  getTodoById(id: number, user: User): Promise<Todo> {
+    return this.todoRepository.findOneTodo(id, user);
   }
 
   createTodo(createTodoRequest: CreateTodoRequest, user: User): Promise<CreateTodoResponse> {
@@ -29,8 +29,12 @@ export class TodoService {
     return this.todoRepository.createTodo(createTodoRequest, user);
   }
 
-  async changeTitle(id: number, changeTitleRequest: ChangeTitleDtoRequest): Promise<ChangeTitleDtoResponse> {
-    const findTodo: Todo = await this.getTodoById(id);
+  async changeTitle(
+    id: number,
+    changeTitleRequest: ChangeTitleDtoRequest,
+    user: User,
+  ): Promise<ChangeTitleDtoResponse> {
+    const findTodo: Todo = await this.getTodoById(id, user);
     const { title } = changeTitleRequest;
     if (!title || title.trim() === '') {
       throw new BadRequestException(`할 일을 입력해주세요.`);
@@ -39,13 +43,13 @@ export class TodoService {
     return this.todoRepository.changeTitle(findTodo, changeTitleRequest);
   }
 
-  async changeCompletes(id: number): Promise<void> {
-    const findTodo: Todo = await this.getTodoById(id);
+  async changeCompletes(id: number, user: User): Promise<void> {
+    const findTodo: Todo = await this.getTodoById(id, user);
     return this.todoRepository.changeCompletes(findTodo);
   }
 
-  async deleteTodo(id: number): Promise<void> {
-    const findTodo: Todo = await this.getTodoById(id);
+  async deleteTodo(id: number, user: User): Promise<void> {
+    const findTodo: Todo = await this.getTodoById(id, user);
     return this.todoRepository.deleteTodo(findTodo);
   }
 }

@@ -10,12 +10,12 @@ import { User } from 'src/auth/user.entity';
 
 @CustomRepository(Todo)
 export class TodoRepository extends Repository<Todo> {
-  async findAllTodo(): Promise<Todo[]> {
-    return this.find();
+  async findAllTodo(user: User): Promise<Todo[]> {
+    return this.find({ where: { user } });
   }
 
-  async findOneTodo(id: number): Promise<Todo> {
-    const todo = await this.findOne({ where: { id } });
+  async findOneTodo(id: number, user: User): Promise<Todo> {
+    const todo = await this.findOne({ where: { id, user } });
     if (!todo) {
       throw new NotFoundException(`ID가 ${id}인 할 일 을 찾을 수 없습니다.`);
     }
@@ -35,6 +35,7 @@ export class TodoRepository extends Repository<Todo> {
     const returnTodo: CreateTodoResponse = {
       title: savedTodo.title,
       completed: savedTodo.completed,
+      user: savedTodo.user,
     };
     return returnTodo;
   }
@@ -42,9 +43,10 @@ export class TodoRepository extends Repository<Todo> {
     changeTodo.title = changeTitleRequest.title;
     const newTodo = await changeTodo.save();
 
-    const returnTodo: CreateTodoResponse = {
+    const returnTodo: ChangeTitleDtoResponse = {
       title: newTodo.title,
       completed: newTodo.completed,
+      user: newTodo.user,
     };
     return returnTodo;
   }
