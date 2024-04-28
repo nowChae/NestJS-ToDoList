@@ -14,7 +14,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
     TypeOrmExModule.forCustomRepository([UserRepository]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: process.env.JWT_EXPIRESIN },
+      signOptions: { expiresIn: Number.parseInt(process.env.JWT_EXPIRESIN, 10) },
     }),
   ],
   controllers: [AuthController],

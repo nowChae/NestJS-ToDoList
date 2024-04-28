@@ -21,7 +21,6 @@ export class AuthController {
       res.cookie('access_token', accessToken);
       res.redirect('/login.html');
       console.log(accessToken);
-      console.log('로그인 성공');
     }
     return;
   }
@@ -29,7 +28,6 @@ export class AuthController {
   @Get('profile')
   @UseGuards(AuthGuard('jwt'))
   userProfile(@GetUser() user: User) {
-    console.log('실행은 되니?');
-    console.log('user', user);
+    return user;
   }
 }

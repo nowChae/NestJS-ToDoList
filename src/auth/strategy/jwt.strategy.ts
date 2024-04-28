@@ -14,14 +14,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: any) {
+  async validate(payload: any, done): Promise<any> {
     const { kakaoId } = payload;
     const user: User = await this.userRepository.findOne({ where: { kakaoId } });
-    console.log('validate 실행중');
     if (!user) {
-      console.log('user 없어');
       throw new UnauthorizedException();
     }
-    return user;
+    return done(null, user);
   }
 }
